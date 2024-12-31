@@ -7,7 +7,9 @@ const resultMessage = document.querySelector(".winnerOutput")
 buttons = document.querySelectorAll("button");
 
 
-let totalRoundsTally = 0;
+let playPointsCount = 0;
+let cpuPointsCount = 0;
+
 let winnerArray =[];
 
 // get computerChoice
@@ -28,7 +30,8 @@ function userSelection(){
 
 // play a round
 function game(playerMove){
-if (totalRoundsTally == 5){
+    let wins = checkWins();
+    if (wins == 5 || wins > 5){
        return;
     }
 
@@ -36,10 +39,14 @@ if (totalRoundsTally == 5){
     let roundWinner = playRound(playerMove, cpuMove);
     updateScoreRound(roundWinner, cpuMove);
     winnerArray.push(roundWinner);
-    totalRoundsTally++;
-    if(totalRoundsTally == 5){
-        checkWins();
+    //totalRoundsTally++;
+    incrementWinnerCount(roundWinner);
+    if(playPointsCount ==  5 && cpuPointsCount <5){
+        resultMessage.innerHTML = `Congrats, You won the game!`
+    }else if(playPointsCount <  5 && cpuPointsCount == 5){
+        resultMessage.innerHTML = `Sorry, You lose the game!`
     }
+    
 
 }
 
@@ -62,9 +69,11 @@ function playRound(humanChoice, computerChoice){
         }else if(computerChoice == "scissors" && humanChoice == "paper"){
             return "lose"
 
-        }else if(computerChoice == "paper" && humanChoice == "rock"){ck")
+        }else if(computerChoice == "paper" && humanChoice == "rock"){
+           // console.log("You lose! Paper beats Rock")
             return "lose"
         }else if(humanChoice == computerChoice){
+            //console.log("Tie")
             return "tie"
         }
 
@@ -93,19 +102,32 @@ function updateScoreRound(roundWinner, cpuMove){
     }
 }
 
+// increment the player and cpu score count 
+function incrementWinnerCount(result){
+    if (result == "win"){
+        playPointsCount ++
+    }else if(result == "lose"){
+        cpuPointsCount ++;
+
+    }
+
+}
 // check winner
 
 function checkWins() {
-    const playerWinCount = winnerArray.filter((item) => item == "win").length;
-    const cpuWinCount = winnerArray.filter((item) => item == "lose").length;
+    const pWinCount = winnerArray.filter((item) => item == "win").length;
+    const cWinCount = winnerArray.filter((item) => item == "lose").length;
 
-    if (playerWinCount > cpuWinCount){
-        resultMessage.innerHTML = `Congrats! You are the winner!`
-    }else if(playerWinCount < cpuWinCount){
-        resultMessage.innerHTML = `Sorry, You  lose the game!`
-    }else {
-        alert("Tie game!")
-    }
+    return Math.max(pWinCount, cWinCount);
+    //if (pWinCount > cWinCount){
+        //alert("you won the game!")
+        //resultMessage.innerHTML = `Congrats! You are the winner!`
+    //}else if(pWinCount < cWinCount){
+        //alert("You lose the game!")
+        //resultMessage.innerHTML = `Sorry, You  lose the game!`
+    //}else {
+        //alert("Tie game!")
+   //}
 }
 
 //activate the buttons
