@@ -1,0 +1,47 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+    /*
+    //padding: 0;
+    //margin: 0;
+    */
+
+}
+
+
+.gameSection{
+    display: flex;
+    flex-direction: column;
+    height: 80vh;
+    justify-content: center;
+    align-items: center;
+
+
+
+}
+
+.gameBox{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 600px;
+    width: 600px;
+    border: 2px solid red;
+
+}
+
+.score{
+    display: flex;
+    gap: 10px;
+}
+
+.playerScore, .computerScore, .roundBox, .userButtons{
+    display: flex;
+    gap: 5px;
+}
+
+.userButtons button{
+    background-color: red;
+
+}
+

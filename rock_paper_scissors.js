@@ -1,102 +1,112 @@
- 
+// get all html nodes/elements
+const numRound = document.querySelector('.roundCounter');
+const humanScore = document.querySelector('.pScore');
+const computerScore = document.querySelector('.cCount');
+const tieCount = document.querySelector(".ties");
+const resultMessage = document.querySelector(".winnerOutput")
+buttons = document.querySelectorAll("button");
 
+
+let totalRoundsTally = 0;
+let winnerArray =[];
+
+// get computerChoice
 function getComputerChoice(){
-    const ranNum = Math.floor(Math.random() * 3) + 1;
-    //console.log(ranNum)
-    if ( ranNum == 1 ){
-        //console.log("Rock")
-        return "rock";
-    } else if (ranNum == 2){
-        //console.log("Paper")
-        return "paper";
-    } else {
-        //console.log("Scissors")
-        return "scissors";
-    }
+    const cpuChoice = Math.floor(Math.random() * 2) + 1;
+    choiceArray = ["rock", "paper", "scissors"];
+    return choiceArray[cpuChoice]
 }
 
-function getHumanChoice(){
-    const humChoice = prompt("Enter rock, paper or scissors").toLowerCase();
-    
-    if (humChoice == "rock"){
-        //console.log("Rock")
-        return "rock"
-    } else if (humChoice == "paper"){
-        //console.log("Paper")
-        return "paper"
-    } else if (humChoice == "scissors"){
-        //console.log("Scissors")
-        return "scissors"
-    }
+// get player choice and activate the game
+function userSelection(){
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            game(button.value);
+        });
+    });
 }
 
+// play a round
+function game(playerMove){
+if (totalRoundsTally == 5){
+       return;
+    }
 
-function playRound(){
-    
-    const humanChoice = getHumanChoice();
-    const computerChoice = getComputerChoice();
-
-    if (humanChoice == "rock" && computerChoice == "scissors"){
-        console.log("You win! Rock beats Scissors")
-        return "win"
-        //humanScore += 1;
-
-    }else if (humanChoice == "scissors" && computerChoice == "paper"){
-        console.log("You win! Scissors beats Paper")
-        return "win"
-        //humanScore += 1;
-
-    }else if (humanChoice == "paper" && computerChoice == "rock"){
-        console.log("You win! Paper beats Rock")
-        return "win"
-       // humanScore += 1;
-
-    }else if(computerChoice == "rock" && humanChoice == "scissors"){
-        console.log("You lose! Rock beats Scissors")
-        return "lose"
-        //computerScore += 1;
-
-    }else if(computerChoice == "scissors" && humanChoice == "paper"){
-        console.log("You lose! scissors beats paper")
-        return "lose"
-        //computerScore += 1;
-
-    }else if(computerChoice == "paper" && humanChoice == "rock"){
-        console.log("You lose! Paper beats Rock")
-        return "lose"
-        //computerScore += 1;
+    let cpuMove = getComputerChoice();
+    let roundWinner = playRound(playerMove, cpuMove);
+    updateScoreRound(roundWinner, cpuMove);
+    winnerArray.push(roundWinner);
+    totalRoundsTally++;
+    if(totalRoundsTally == 5){
+        checkWins();
     }
 
 }
 
 
-function playGame(){
-    let humanScore = 0;
-    let computerScore = 0; 
-    const rounds = 5;
+// get round winner
+function playRound(humanChoice, computerChoice){
 
-    for (i = 1; i <= rounds; i++){
-        let roundResult = playRound();
-        console.log(`Round result: ${roundResult}`)
+        if (humanChoice == "rock" && computerChoice == "scissors"){
+            return "win"
 
-        if (roundResult == "win"){
-            humanScore += 1;
-        }else{
-            computerScore += 1;
+        }else if (humanChoice == "scissors" && computerChoice == "paper"){
+            return "win"
+
+        }else if (humanChoice == "paper" && computerChoice == "rock"){
+            return "win"
+
+        }else if(computerChoice == "rock" && humanChoice == "scissors"){
+            return "lose"
+
+        }else if(computerChoice == "scissors" && humanChoice == "paper"){
+            return "lose"
+
+        }else if(computerChoice == "paper" && humanChoice == "rock"){ck")
+            return "lose"
+        }else if(humanChoice == computerChoice){
+            return "tie"
         }
-    }
-    
-    if (humanScore > computerScore){
-        console.log("You won the game")
-        console.log(`Your score: ${humanScore}`)
-        console.log(`Computer score: ${computerScore}`)
-    }else{
-        console.log("You lose the game")
-        console.log(`Your score: ${humanScore}`)
-        console.log(`Computer score: ${computerScore}`)
-    }
 
+}    
+       
+// Update Score
+function updateScoreRound(roundWinner, cpuMove){
+
+    if (roundWinner == "win"){
+
+        humanScore.innerText = parseInt(humanScore.innerText) + 1;
+        numRound.innerText = parseInt(numRound.innerText) + 1;
+        resultMessage.innerHTML = `You win the round! Computer chose ${cpuMove}`
+
+    }else if (roundWinner == "lose"){
+
+        computerScore.innerText = parseInt(computerScore.innerText) + 1
+        numRound.innerText = parseInt(numRound.innerText) + 1
+        resultMessage.innerHTML = `You  lose the round! Computer chose ${cpuMove}`
+
+    } else if (roundWinner == "tie"){
+
+        tieCount.innerText = parseInt(tieCount.innerText) + 1
+        numRound.innerText = parseInt(numRound.innerText) + 1
+        resultMessage.innerHTML = `Tie! Computer chose ${cpuMove}`
+    }
 }
 
+// check winner
 
-window.onload = playGame();
+function checkWins() {
+    const playerWinCount = winnerArray.filter((item) => item == "win").length;
+    const cpuWinCount = winnerArray.filter((item) => item == "lose").length;
+
+    if (playerWinCount > cpuWinCount){
+        resultMessage.innerHTML = `Congrats! You are the winner!`
+    }else if(playerWinCount < cpuWinCount){
+        resultMessage.innerHTML = `Sorry, You  lose the game!`
+    }else {
+        alert("Tie game!")
+    }
+}
+
+//activate the buttons
+userSelection();
